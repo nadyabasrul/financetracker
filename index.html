@@ -26,11 +26,11 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="glass p-5 rounded-2xl">
                 <p class="text-sm text-slate-400">Total Income</p>
-                <h3 id="total-income" class="text-2xl font-bold text-emerald-400 mt-1">$0.00</h3>
+                <h3 id="total-income" class="text-2xl font-bold text-emerald-400 mt-1">Rp0.00</h3>
             </div>
             <div class="glass p-5 rounded-2xl">
                 <p class="text-sm text-slate-400">Total Expenses</p>
-                <h3 id="total-expenses" class="text-2xl font-bold text-rose-400 mt-1">$0.00</h3>
+                <h3 id="total-expenses" class="text-2xl font-bold text-rose-400 mt-1">Rp.00</h3>
             </div>
             <div class="glass p-5 rounded-2xl">
                 <p class="text-sm text-slate-400">Net Profit</p>
@@ -65,7 +65,7 @@
                     <input type="text" id="description" required placeholder="e.g., Lunch" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Amount ($)</label>
+                    <label class="block text-xs text-slate-400 mb-1">Amount (Rp)</label>
                     <input type="number" step="0.01" id="amount" required placeholder="0.00" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
@@ -135,22 +135,22 @@
                 const itemHTML = `
                     <div class="flex justify-between items-center bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                         <div>
-                            <h4 class="font-medium text-sm text-white">${tx.DESCRIPTION || 'Tanpa Keterangan'}</h4>
-                            <p class="text-xs text-slate-400">${tx.CATEGORY || 'General'} • ${tx.DATE || ''}</p>
+                            <h4 class="font-medium text-sm text-white">Rp{tx.DESCRIPTION || 'Tanpa Keterangan'}</h4>
+                            <p class="text-xs text-slate-400">Rp{tx.CATEGORY || 'General'} • Rp{tx.DATE || ''}</p>
                         </div>
-                        <span class="font-semibold text-sm ${colorClass}">${sign}$${amount.toFixed(2)}</span>
+                        <span class="font-semibold text-sm Rp{colorClass}">Rp{sign}Rp{amount.toFixed(2)}</span>
                     </div>
                 `;
                 listEl.innerHTML += itemHTML;
             });
 
-            document.getElementById('total-income').innerText = `$${totalInc.toFixed(2)}`;
-            document.getElementById('total-expenses').innerText = `$${totalExp.toFixed(2)}`;
+            document.getElementById('total-income').innerText = `Rp{totalInc.toFixed(2)}`;
+            document.getElementById('total-expenses').innerText = `Rp{totalExp.toFixed(2)}`;
             
             const netProfit = totalInc - totalExp;
             const netEl = document.getElementById('net-profit');
-            netEl.innerText = `$${netProfit.toFixed(2)}`;
-            netEl.className = `text-2xl font-bold mt-1 ${netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+            netEl.innerText = `Rp{netProfit.toFixed(2)}`;
+            netEl.className = `text-2xl font-bold mt-1 Rp{netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
         }
 
         async function handleFormSubmit(e) {
