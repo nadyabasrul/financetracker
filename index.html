@@ -101,56 +101,103 @@
                 document.getElementById('transaction-list').innerHTML = `<p class="text-sm text-rose-400 text-center py-4">Gagal memuat data dari Spreadsheet.</p>`;
             }
         }
+function renderData(transactions) {
+    const listEl = document.getElementById('transaction-list');
+    listEl.innerHTML = '';
 
-        function renderData(transactions) {
-            const listEl = document.getElementById('transaction-list');
-            listEl.innerHTML = '';
+    let totalInc = 0;
+    let totalExp = 0;
 
-            let totalInc = 0;
-            let totalExp = 0;
+    if (!transactions || transactions.length === 0) {
+        listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">Belum ada transaksi di Spreadsheet.</p>`;
+        document.getElementById('total-income').innerText = `Rp0`;
+        document.getElementById('total-expenses').innerText = `Rp0`;
+        document.getElementById('net-profit').innerText = `Rp0`;
+        return;
+    }
 
-            if (!transactions || transactions.length === 0) {
-                listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">Belum ada transaksi di Spreadsheet.</p>`;
-                document.getElementById('total-income').innerText = `$0.00`;
-                document.getElementById('total-expenses').innerText = `$0.00`;
-                document.getElementById('net-profit').innerText = `$0.00`;
-                return;
-            }
+    [...transactions].reverse().forEach(tx => {
+        const amount = parseFloat(tx.AMOUNT) || 0;
+        const type = tx.TYPE ? tx.TYPE.trim() : 'Expense';
 
-            // Loop data dari spreadsheet (memakai header huruf besar: TYPE, DESCRIPTION, AMOUNT, CATEGORY, DATE)
-            [...transactions].reverse().forEach(tx => {
-                const amount = parseFloat(tx.AMOUNT) || 0;
-                const type = tx.TYPE ? tx.TYPE.trim() : 'Expense';
-                
-                if (type === 'Income') {
-                    totalInc += amount;
-                } else {
-                    totalExp += amount;
-                }
+        if (type === 'Income') {
+            totalInc += amount;
+        } else {
+            totalExp += amount;
+        }
 
-                const isIncome = type === 'Income';
-                const sign = isIncome ? '+' : '-';
-                const colorClass = isIncome ? 'text-emerald-400' : 'text-slate-100';
+        const isIncome = type === 'Income';
+        const sign = isIncome ? '+' : '-';
+        const colorClass = isIncome ? 'text-emerald-400' : 'text-slate-100';
 
-                const itemHTML = `
-                    <div class="flex justify-between items-center bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <div>
-                            <h4 class="font-medium text-sm text-white">Rp{tx.DESCRIPTION || 'Tanpa Keterangan'}</h4>
-                            <p class="text-xs text-slate-400">Rp{tx.CATEGORY || 'General'} • Rp{tx.DATE || ''}</p>
-                        </div>
-                        <span class="font-semibold text-sm Rp{colorClass}">Rp{sign}Rp{amount.toFixed(2)}</span>
-                    </div>
-                `;
-                listEl.innerHTML += itemHTML;
-            });
+        const itemHTML = `
+            <div class="flex justify-between items-center bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                <div>
+                    <h4 class="font-medium text-sm text-white">${tx.DESCRIPTION || 'Tanpa Keterangan'}</h4>
+                    <p class="text-xs text-slate-400">${tx.CATEGORY || 'General'} • ${tx.DATE || ''}</p>
+                </div>
+                <span class="font-semibold text-sm ${colorClass}">${sign}Rp${amount.toLocaleString('id-ID')}</span>
+            </div>
+        `;
+        listEl.innerHTML += itemHTML;
+    });
 
-            document.getElementById('total-income').innerText = `Rp{totalInc.toFixed(2)}`;
-            document.getElementById('total-expenses').innerText = `Rp{totalExp.toFixed(2)}`;
-            
-            const netProfit = totalInc - totalExp;
-            const netEl = document.getElementById('net-profit');
-            netEl.innerText = `Rp{netProfit.toFixed(2)}`;
-            netEl.className = `text-2xl font-bold mt-1 Rp{netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+    document.getElementById('total-income').innerText = `Rp${totalInc.toLocaleString('id-ID')}`;
+    document.getElementById('total-expenses').innerText = `Rp${totalExp.toLocaleString('id-ID')}`;
+
+    const netProfit = totalInc - totalExp;
+    const netEl = document.getElementById('net-profit');
+    netEl.innerText = `Rp${netProfit.toLocaleString('id-ID')}`;
+    netEl.className = `text-2xl font-bold mt-1 ${netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+        } function renderData(transactions) {
+    const listEl = document.getElementById('transaction-list');
+    listEl.innerHTML = '';
+
+    let totalInc = 0;
+    let totalExp = 0;
+
+    if (!transactions || transactions.length === 0) {
+        listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">Belum ada transaksi di Spreadsheet.</p>`;
+        document.getElementById('total-income').innerText = `Rp0`;
+        document.getElementById('total-expenses').innerText = `Rp0`;
+        document.getElementById('net-profit').innerText = `Rp0`;
+        return;
+    }
+
+    [...transactions].reverse().forEach(tx => {
+        const amount = parseFloat(tx.AMOUNT) || 0;
+        const type = tx.TYPE ? tx.TYPE.trim() : 'Expense';
+
+        if (type === 'Income') {
+            totalInc += amount;
+        } else {
+            totalExp += amount;
+        }
+
+        const isIncome = type === 'Income';
+        const sign = isIncome ? '+' : '-';
+        const colorClass = isIncome ? 'text-emerald-400' : 'text-slate-100';
+
+        const itemHTML = `
+            <div class="flex justify-between items-center bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                <div>
+                    <h4 class="font-medium text-sm text-white">${tx.DESCRIPTION || 'Tanpa Keterangan'}</h4>
+                    <p class="text-xs text-slate-400">${tx.CATEGORY || 'General'} • ${tx.DATE || ''}</p>
+                </div>
+                <span class="font-semibold text-sm ${colorClass}">${sign}Rp${amount.toLocaleString('id-ID')}</span>
+            </div>
+        `;
+        listEl.innerHTML += itemHTML;
+    });
+
+    document.getElementById('total-income').innerText = `Rp${totalInc.toLocaleString('id-ID')}`;
+    document.getElementById('total-expenses').innerText = `Rp${totalExp.toLocaleString('id-ID')}`;
+
+    const netProfit = totalInc - totalExp;
+    const netEl = document.getElementById('net-profit');
+    netEl.innerText = `Rp${netProfit.toLocaleString('id-ID')}`;
+    netEl.className = `text-2xl font-bold mt-1 ${netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+}
         }
 
         async function handleFormSubmit(e) {
